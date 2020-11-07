@@ -8,8 +8,7 @@ productRouter.use(bodyParser.json())
 
 productRouter.route('/')
 .all((req, res, next) => {
-    if(req.headers.auth.toLowerCase() === 'admin')
-    {
+    if(req.headers.auth.toLowerCase() === 'admin'){
         res.statusCode = 200
         res.setHeader('Content-Type', 'application/json')
         next()
@@ -17,13 +16,12 @@ productRouter.route('/')
     else if (req.headers.auth.toLowerCase() === 'customer') {
         res.statusCode = 403
         res.setHeader('Content-Type', 'text/html')
-        res.end(`<html><body><h1>Error ${res.statusCode}: Customer does not have access to the content.</h1></body></html>`)
+        res.end(`<html><body><h1>Error ${res.statusCode}: Acceso denegado. Clientes no tienen acceso al contenido.</h1></body></html>`)
     } else {
         res.statusCode = 401
         res.setHeader('Content-Type', 'text/html')
-        res.end(`<html><body><h1>Error ${res.statusCode}: You are not authenticated.</h1></body></html>`)
+        res.end(`<html><body><h1>Error ${res.statusCode}: Acceso denegado a desconocidos, por favor identificarse.</h1></body></html>`)
     }
-    
 })
 .get((req, res, next) => {
     res.json(products)
