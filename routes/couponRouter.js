@@ -28,7 +28,7 @@ couponRouter.route('/')
         res.end(`<html><body><h1>Error ${res.statusCode}: Acceso denegado. Clientes no tienen acceso al contenido.</h1></body></html>`)
     }
 })
-.post((req, res , next) => {
+.post((req, res, next) => {
     if (req.headers.auth.toLowerCase() === 'admin') {
         if (req.body) {
             const newCoupon = {

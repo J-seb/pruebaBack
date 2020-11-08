@@ -29,14 +29,31 @@ productRouter.route('/')
 
 productRouter.route('/:productId')
 .all((req, res, next) => {
-    res.statusCode = 200
-    res.setHeader('Content-Type', 'application/json')
-    next()
+    if(req.headers.auth.toLowerCase() === 'admin'){
+        res.statusCode = 200
+        res.setHeader('Content-Type', 'application/json')
+        next()
+    }
+    else if (req.headers.auth.toLowerCase() === 'customer') {
+        res.statusCode = 403
+        res.setHeader('Content-Type', 'text/html')
+        res.end(`<html><body><h1>Error ${res.statusCode}: Acceso denegado. Clientes no tienen acceso al contenido.</h1></body></html>`)
+    } else {
+        res.statusCode = 401
+        res.setHeader('Content-Type', 'text/html')
+        res.end(`<html><body><h1>Error ${res.statusCode}: Acceso denegado a desconocidos, por favor identificarse.</h1></body></html>`)
+    }
 })
 .get((req, res, next) => {
     const result = products.products.find((product) => product.id == req.params.productId)
-    console.log(result)
-    res.json(result)
+    if (result) {
+        res.json(result)
+    } else {
+        res.statusCode = 404
+        res.setHeader('Content-Type', 'text/html')
+        res.end(`<html><body><h1>Error ${res.statusCode}: Recurso no encontrado.</h1></body></html>`)
+    }
+    
 })
 
 module.exports = productRouter
